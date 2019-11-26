@@ -100,4 +100,8 @@ class TinyPromise {
       }
     });
   }
+
+  catch(onRejected) {
+    return this.then(null, onRejected);
+  }
 }
