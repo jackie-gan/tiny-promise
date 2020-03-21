@@ -1,0 +1,24 @@
+{
+  "name": "tiny-promise",
+  "version": "1.0.0",
+  "description": "仿造 Promise",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackie-gan/tiny-promise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jackie-gan/tiny-promise/issues"
+  },
+  "homepage": "https://github.com/jackie-gan/tiny-promise#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.9.0",
+    "jest": "^25.1.0"
+  }
+}

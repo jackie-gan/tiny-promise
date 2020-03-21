@@ -47,6 +47,39 @@ class TinyPromise {
     }
   }
 
+  static resolve(value) {
+    if (value instanceof TinyPromise) return value;
+    return new TinyPromise((resolve) => {
+      resolve(value);
+    });
+  }
+
+  static reject(value) {
+    return new TinyPromise((resolve, reject) => {
+      reject(value);
+    });
+  }
+
+  static all(promises) {
+    let count = 0;
+    const result = [];
+
+    return new TinyPromise((resolve, reject) => {
+      promises.forEach(promise => {
+        TinyPromise.resolve(promise).then((value) => {
+          count++;
+          result.push(value);
+          if(count === promise.length) {
+            resolve(result)
+          }
+        }, (err) => {
+          reject(err);
+        });
+        promise.finally(finishCallBack);
+      });
+    });
+  }
+
   then(onFullfilled, onRejected) {
     const currentStatus = this._status;
     const currentValue = this._value;
@@ -55,6 +88,7 @@ class TinyPromise {
       const resolveCall = (value) => {
         try {
           if (typeof onFullfilled !== 'function') {
+            // 值穿透
             onFullfilledNext(value);
           } else {
             const ret = onFullfilled(value);
@@ -72,6 +106,7 @@ class TinyPromise {
       const rejectCall = (value) => {
         try {
           if (typeof onRejected !== 'function') {
+            // 值穿透
             onRejectedNext(value);
           } else {
             const ret = onRejected(value);
@@ -102,6 +137,18 @@ class TinyPromise {
   }
 
   catch(onRejected) {
-    return this.then(null, onRejected);
+    return this.then(undefined, onRejected);
+  }
+
+  finally(callback) {
+    return this.then((value) => {
+      callback();
+      return value;
+    }, (error) => {
+      callback();
+      throw error;
+    });
   }
 }
+
+export default TinyPromise;
