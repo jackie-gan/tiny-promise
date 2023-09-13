@@ -157,16 +157,16 @@ class TestPromise {
 
   // promises中所有的任务执行完成，则resolve
   // 中间有报错，则reject
-  static all(promises) {
+  static all(iterables) {
     let count = 0;
     const promiseResult = [];
 
     return new TestPromise((resolve, reject) => {
-      for (const promise of promises) {
-        promise.then((value) => {
+      for (const item of iterables) {
+        Promise.resolve(item).then((value) => {
           count += 1;
           promiseResult.push(value);
-          if (count === promises.length) {
+          if (count === iterables.length) {
             resolve(promiseResult);
           }
         }, (err) => {
@@ -177,10 +177,10 @@ class TestPromise {
   }
 
   // 返回一个 promise，一旦迭代器中的某个promise解决或拒绝，返回的 promise就会解决或拒绝
-  static race(promises) {
+  static race(iterables) {
     return new TestPromise((resolve, reject) => {
-      for (const promise of promises) {
-        promise.then((value) => {
+      for (const item of iterables) {
+        Promise.resolve(item).then((value) => {
           resolve(value);
         }, (err) => {
           reject(err);
